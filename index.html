@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTalk Summit 2026</title>
+    <style>
+        /* Basic Reset & Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background-color: #2c3e50; /* Dark blue/grey */
+            color: #ecf0f1; /* Light grey text */
+            padding: 30px 40px;
+            text-align: center;
+            border-bottom: 3px solid #3498db; /* Blue accent */
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 30px 40px;
+            background-color: #e0e0e0; /* Light grey background for search */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-section label {
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .search-section input[type="text"] {
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            flex-grow: 1;
+            max-width: 400px; /* Limit input width */
+        }
+
+        /* Schedule Container */
+        #schedule-container {
+            padding: 40px;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+            gap: 25px;
+        }
+
+        .schedule-item {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .schedule-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .schedule-item .time {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 10px;
+            display: block; /* Ensure it takes its own line */
+        }
+
+        .schedule-item .title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #2c3e50; /* Dark blue/grey */
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .schedule-item .speakers,
+        .schedule-item .categories {
+            font-size: 0.95em;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .schedule-item .speakers span,
+        .schedule-item .categories span {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .schedule-item .description {
+            font-size: 0.95em;
+            color: #555;
+            margin-top: 10px;
+            flex-grow: 1; /* Allows description to take available space */
+        }
+
+        /* Specific styling for breaks */
+        .schedule-item.break {
+            background-color: #ecf0f1; /* Light grey */
+            border-left: 5px solid #3498db; /* Blue accent */
+            text-align: center;
+            justify-content: center;
+        }
+
+        .schedule-item.break .title {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .schedule-item.break .time {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        .schedule-item.break .description,
+        .schedule-item.break .speakers,
+        .schedule-item.break .categories {
+            display: none; /* Hide these for breaks */
+        }
+
+        /* Categories styling */
+        .category-tag {
+            display: inline-block;
+            background-color: #3498db; /* Blue */
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+            font-size: 0.85em;
+            cursor: pointer; /* Make them clickable for search */
+            transition: background-color 0.2s ease;
+        }
+        .category-tag:hover {
+            background-color: #2980b9;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            #app-container {
+                margin: 0;
+            }
+            header {
+                padding: 20px 20px;
+            }
+            header h1 {
+                font-size: 2em;
+            }
+            .search-section {
+                padding: 20px 20px;
+                flex-direction: column;
+            }
+            .search-section input[type="text"] {
+                width: 100%;
+                max-width: none;
+            }
+            #schedule-container {
+                padding: 20px;
+                grid-template-columns: 1fr; /* Single column on smaller screens */
+            }
+            .schedule-item {
+                padding: 15px;
+            }
+            .schedule-item .title {
+                font-size: 1.2em;
+            }
+            .schedule-item .time {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <header>
+            <h1>TechTalk Summit 2026</h1>
+            <p>A full day of insightful technical talks.</p>
+        </header>
+
+        <section class="search-section">
+            <label for="search-input">Filter by Category:</label>
+            <input type="text" id="search-input" placeholder="e.g., AI, Cloud, Security">
+        </section>
+
+        <main id="schedule-container">
+            <!-- Schedule items will be dynamically inserted here by JavaScript -->
+        </main>
+    </div>
+
+    <script>
+        // Placeholder Data for Talks
+        const talksData = [
+            {
+                id: 'talk1',
+                title: "The Future of AI: Large Language Models",
+                speakers: ["Dr. Anya Sharma", "Ben Carter"],
+                categories: ["AI", "LLM", "Future Tech"],
+                description: "Explore the latest advancements in Large Language Models and their potential impact on various industries.",
+                durationMinutes: 60
+            },
+            {
+                id: 'talk2',
+                title: "Mastering Cloud-Native Development with Kubernetes",
+                speakers: ["Carlos Rodriguez"],
+                categories: ["Cloud", "DevOps", "Kubernetes"],
+                description: "Learn how to build, deploy, and manage scalable applications using Kubernetes in a cloud-native environment.",
+                durationMinutes: 60
+            },
+            {
+                id: 'talk3',
+                title: "WebAssembly: Performance for the Web",
+                speakers: ["Maria Garcia"],
+                categories: ["Web", "Performance", "Wasm"],
+                description: "Discover how WebAssembly is revolutionizing web performance and enabling new types of applications in the browser.",
+                durationMinutes: 60
+            },
+            {
+                id: 'talk4',
+                title: "Ethical Hacking: Protecting Your Digital Assets",
+                speakers: ["David Lee", "Sarah Chen"],
+                categories: ["Security", "Cybersecurity", "Hacking"],
+                description: "Understand the principles of ethical hacking and learn strategies to defend against modern cyber threats.",
+                durationMinutes: 60
+            },
+            {
+                id: 'talk5',
+                title: "Building Scalable Microservices with Node.js",
+                speakers: ["Emily Wong"],
+                categories: ["Node.js", "Backend", "Microservices"],
+                description: "A deep dive into designing and implementing robust microservice architectures using Node.js.",
+                durationMinutes: 60
+            },
+            {
+                id: 'talk6',
+                title: "Introduction to Quantum Computing for Developers",
+                speakers: ["Professor Jian Li"],
+                categories: ["Quantum Computing", "Science", "Advanced Topics"],
+                description: "Get a primer on the fundamental concepts of quantum computing and its potential applications.",
+                durationMinutes: 60
+            }
+        ];
+
+        // Event Configuration
+        const eventConfig = {
+            startTime: '10:00', // HH:MM format
+            talkDurationMinutes: 60,
+            transitionMinutes: 10,
+            lunchBreakDurationMinutes: 60,
+            numberOfTalks: 6
+        };
+
+        // Helper function to format time (e.g., 10:00 AM)
+        function formatTime(hour, minute) {
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const formattedHour = hour % 12 || 12; // Convert 0 to 12 for 12 AM/PM
+            const formattedMinute = minute.toString().padStart(2, '0');
+            return `${formattedHour}:${formattedMinute} ${ampm}`;
+        }
+
+        // Helper function to add minutes to a time
+        function addMinutes(timeStr, minutesToAdd) {
+            // Handle time strings like "10:00 AM" or "10:00"
+            let timeParts = timeStr;
+            if (timeStr.includes('AM') || timeStr.includes('PM')) {
+                const parts = timeStr.split(' ');
+                timeParts = parts[0];
+            }
+            const [hours, minutes] = timeParts.split(':').map(Number);
+            
+            let totalMinutes = hours * 60 + minutes + minutesToAdd;
+            
+            // Handle day rollover if necessary (though not for this short event)
+            const newHours = Math.floor(totalMinutes / 60);
+            const newMinutes = totalMinutes % 60;
+            
+            return {
+                hour: newHours,
+                minute: newMinutes,
+                toString: function() {
+                    return `${this.hour}:${this.minute.toString().padStart(2, '0')}`;
+                },
+                toDisplayString: function() {
+                    return formatTime(this.hour, this.minute);
+                }
+            };
+        }
+
+        // Function to generate the schedule
+        function generateSchedule() {
+            const schedule = [];
+            let currentTime = { hour: 10, minute: 0, toString: function() { return `${this.hour}:${this.minute.toString().padStart(2, '0')}`; }, toDisplayString: function() { return formatTime(this.hour, this.minute); } };
+
+            let talkIndex = 0;
+            let eventCounter = 0; // To help manage item order and transitions
+
+            while(talkIndex < eventConfig.numberOfTalks || schedule.filter(item => item.type === 'talk').length < eventConfig.numberOfTalks) {
+                // Add Talk
+                if (talkIndex < eventConfig.numberOfTalks) {
+                    const talk = talksData[talkIndex];
+                    const talkStartTime = currentTime.toDisplayString();
+                    const nextTimeAfterTalk = addMinutes(currentTime.toString(), eventConfig.talkDurationMinutes);
+                    const talkEndTime = nextTimeAfterTalk.toDisplayString();
+
+                    schedule.push({
+                        id: `item-${eventCounter++}`,
+                        type: 'talk',
+                        time: `${talkStartTime} - ${talkEndTime}`,
+                        ...talk
+                    });
+                    currentTime = nextTimeAfterTalk;
+                    talkIndex++;
+                }
+
+                // Add Transition or Lunch Break
+                const isLastTalk = talkIndex === eventConfig.numberOfTalks;
+                const talksAddedSoFar = schedule.filter(item => item.type === 'talk').length;
+                const isBeforeLunch = talksAddedSoFar === 3; // Assuming 3 talks before lunch
+
+                if (!isLastTalk) {
+                    let breakTitle = 'Transition / Break';
+                    let breakDuration = eventConfig.transitionMinutes;
+
+                    if (isBeforeLunch) { // After the 3rd talk, it's lunch
+                        breakTitle = 'Lunch Break';
+                        breakDuration = eventConfig.lunchBreakDurationMinutes;
+                    }
+
+                    const breakStartTime = currentTime.toDisplayString();
+                    const nextTimeAfterBreak = addMinutes(currentTime.toString(), breakDuration);
+                    const breakEndTime = nextTimeAfterBreak.toDisplayString();
+
+                    schedule.push({
+                        id: `item-${eventCounter++}`,
+                        type: 'break',
+                        time: `${breakStartTime} - ${breakEndTime}`,
+                        title: breakTitle,
+                        description: breakTitle === 'Lunch Break' ? 'Enjoy your meal!' : ''
+                    });
+                    currentTime = nextTimeAfterBreak;
+                }
+            }
+            return schedule;
+        }
+
+        // Function to render the schedule
+        function renderSchedule(schedule) {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = ''; // Clear existing content
+
+            schedule.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('schedule-item');
+                if (item.type === 'break') {
+                    itemElement.classList.add('break');
+                }
+                itemElement.setAttribute('data-id', item.id);
+                itemElement.setAttribute('data-categories', item.categories ? item.categories.join(',') : '');
+
+                let innerHTML = `
+                    <span class="time">${item.time}</span>
+                    <h3 class="title">${item.title}</h3>
+                `;
+                if (item.type !== 'break') {
+                    innerHTML += `
+                        ${item.speakers ? `<p class="speakers">Speakers: <span>${item.speakers.join(', ')}</span></p>` : ''}
+                        ${item.categories ? `
+                            <div class="categories">
+                                Categories: ${item.categories.map(cat => `<span class="category-tag">${cat}</span>`).join(' ')}
+                            </div>` : ''}
+                        ${item.description ? `<p class="description">${item.description}</p>` : ''}
+                    `;
+                }
+                itemElement.innerHTML = innerHTML;
+                container.appendChild(itemElement);
+            });
+
+            // Add event listeners to category tags for search functionality
+            document.querySelectorAll('.category-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const categoryToSearch = this.textContent;
+                    document.getElementById('search-input').value = categoryToSearch;
+                    filterSchedule(); // Trigger filter on click
+                });
+            });
+        }
+
+        // Function to filter schedule based on search input
+        function filterSchedule() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+            const scheduleItems = document.querySelectorAll('.schedule-item');
+
+            scheduleItems.forEach(item => {
+                const categoriesAttr = item.getAttribute('data-categories');
+                const itemCategories = categoriesAttr ? categoriesAttr.split(',').map(cat => cat.trim().toLowerCase()) : [];
+
+                if (searchTerm === '') {
+                    item.style.display = ''; // Show all if search is empty
+                } else {
+                    const matchesSearch = itemCategories.some(cat => cat.includes(searchTerm));
+                    item.style.display = matchesSearch ? '' : 'none'; // Show if matches search
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const generatedSchedule = generateSchedule();
+            renderSchedule(generatedSchedule);
+
+            // Add event listener for search input
+            document.getElementById('search-input').addEventListener('input', filterSchedule);
+        });
+    </script>
+</body>
+</html>
